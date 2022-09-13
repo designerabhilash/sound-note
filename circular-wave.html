@@ -1,0 +1,81 @@
+<html>
+<head></head>
+<style>
+    body {
+        background-image: url(brand-overview-1.jpg);
+        background-repeat: no-repeat;
+    }
+    .play__button__container {
+        position:relative;
+        width: 240px;
+        height: 240px;
+        top: 20px;
+        right: -375px;
+    }
+    .btnplay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 9;
+        transform: translate(-50%, -50%);
+        background-color: transparent;
+        font-family: Open Sans;
+        font-size: 14px;
+        cursor: pointer;
+        color: #fff;
+        font-weight: 700;
+        width: 96px;
+        height: 96px;
+        border: 3px solid #fff;
+        border-radius: 100%;
+        line-height: 1.4;
+        text-transform: uppercase;
+
+    }
+</style>
+<body>
+    <div class="play__button__container">
+        <button class="btnplay" id="playit" onclick="circleWave()">Engine Start</button>
+        <div id="chart-container" style="width: 100%; height: 100%;"></div>
+    </div>
+    <script src="/circular-audio-wave.js"></script>
+    <script>
+        let flag = 0;
+        let intialFlag = 0;
+        let pauseAt = 0;
+        let startedAt = 0;
+        let paused = false;
+        let playPausebtn = document.getElementById('playit');
+        let wave = new CircularAudioWave(document.getElementById('chart-container'));
+        
+        wave.loadAudio('audio/audio5.mp3');
+
+        function circleWave() {
+            if(flag === 0) {
+                if(pauseAt) {
+                    startedAt = Date.now() - pauseAt;
+                    playPausebtn.innerText = "Engine Stop";
+                    wave.resume(pauseAt);
+                } else {
+                    startedAt = Date.now();
+                    wave.play();
+                    flag = 0;
+                }
+                flag = 1;
+                intialFlag = 1;
+                playPausebtn.innerText = "Engine Stop";
+            } else {
+                flag = 0;
+                pauseAt = Date.now() - startedAt;
+                playPausebtn.innerText = "Engine Start"
+                paused = true;
+                wave.onended();
+                //if(pauseAt >= wave.fixedDuration()) {
+                //    pauseAt = 0;
+                //}
+            }
+        }
+    </script>
+</body>
+
+</html>
